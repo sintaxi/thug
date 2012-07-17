@@ -1,0 +1,23 @@
+{
+  "name": "thug",
+  "description": "functional style object filtration and validation system",
+  "version": "0.1.0",
+  "author": "Brock Whitten <brock@sintaxi.com>",
+  "keywords": ["validations", "filter", "orm"],
+  "main": "./thug.js",
+  "scripts": { 
+    "test": "./node_modules/.bin/mocha --ignore-leaks test/*"
+  },
+  "repository": { 
+    "type": "git",
+    "url": "https://github.com/sintaxi/thug.git"
+  },
+  "engines": { "node": "*" },
+  "licenses" : [
+    { 
+      "type" : "MIT",
+      "url" : "https://raw.github.com/sintaxi/thug/master/README.md"
+    }
+  ]
+}
+
