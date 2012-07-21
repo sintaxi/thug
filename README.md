@@ -7,44 +7,28 @@ object. The Account object has state but this
 is only to describe rolodex what kind of behavior
 it should apply to the object that is passed in.
 
-    var account = new Thug({
-      locals: {},
-      filters: {
-        in     : [],
-        before : [],
-        after  : [],
-        out    : []
-      },
-      validations: {}
-    })
+var person = new Thug({
+  locals: {},
+  filters: {
+    in     : [],
+    before : [],
+    after  : [],
+    out    : []
+  },
+  validations: {}
+})
 
-    account.validate(obj, function(errors, obj){
-      ...
-    })
+// Write
+person.constructor.prototype.write = function(primary_key, obj, callback){
+  window.localStorage.setItem(primary_key, JSON.stringify(obj))
+  callback(obj)
+}
 
-    account.validate(id, obj, function(errors, obj){
-      ...
-    })
-
-    account.create(obj, function(errors, obj){
-      ...
-    })
-
-    account.update(id, obj, function(errors, obj){
-      ...
-    })
-
-    account.get(id, function(obj){
-      ...
-    })
-
-    account.get({ property: value }, function(obj){
-      ...
-    })
-
-    account.destroy(id, function(errors, obj){
-      ...
-    })
+// Read the Record
+person.constructor.prototype.read = function(query, callback){
+  JSON.parse(window.localStorage.getItem(query))
+}
+    
 
 Copyright 2012 Chloi Inc.
 All rights reserved.

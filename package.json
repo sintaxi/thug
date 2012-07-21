@@ -8,6 +8,10 @@
   "scripts": { 
     "test": "./node_modules/.bin/mocha --ignore-leaks test/*"
   },
+  "devDependencies": { 
+    "mocha": "1.3.0",
+    "should": "1.0.0"
+  },
   "repository": { 
     "type": "git",
     "url": "https://github.com/sintaxi/thug.git"

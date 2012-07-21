@@ -87,12 +87,18 @@ module.exports = function(config){
     }
     var that = this;
     Flow.filter(obj, filters.in, function(filtered_object){
+      console.log(filtered_object)
       if(q){
         that.read(q, function(record){
-          for(var prop in filtered_object)(function(prop){
-            record[prop] = filtered_object[prop]  
-          })(prop)
+          
+          if(record){
+            for(var prop in filtered_object)(function(prop){
+              record[prop] = filtered_object[prop]  
+            })(prop)
+            
+          }
           that._valid(record, cb)
+
         })
       }else{
         that._valid(obj, cb)
@@ -147,6 +153,10 @@ module.exports = function(config){
         cb(record)
       })
     })
+  }
+  
+  Int.prototype.set = function(key, obj, cb){
+    this.save(key, obj, cb)
   }
   
   Int.prototype.create = function(obj, cb){
