@@ -3,12 +3,7 @@ var Thug    = require("../thug")
 
 var person = new Thug({
   locals: {},
-  filters: {
-    in     : [],
-    before : [],
-    after  : [],
-    out    : []
-  },
+  filters: {},
   validations: {}
 })
 
@@ -25,10 +20,6 @@ person.constructor.prototype.read = function(identifier, callback){
 
 describe("basic-keyval", function(){
 
-  before(function(done){
-    done()
-  })
-
   it("should set person", function(done) {
     person.set("foo", "bar", function(errors, record){
       record.should.eql("bar")
@@ -41,10 +32,6 @@ describe("basic-keyval", function(){
       record.should.eql("bar")
       done()
     })
-  })
-
-  after(function(done){
-    done()
   })
 
 })
