@@ -13,14 +13,14 @@ var person = new Thug({
 })
 
 // Write
-person.constructor.prototype.write = function(obj, callback){
-  global["foo"] = obj
-  callback(null, obj)
+person.constructor.prototype.write = function(identifier, record, callback){
+  global[identifier] = record
+  callback(record)
 }
 
 // Read
-person.constructor.prototype.read = function(query, callback){
-  callback(global[query])
+person.constructor.prototype.read = function(identifier, callback){
+  callback(global[identifier])
 }
 
 describe("basic-keyval", function(){
@@ -30,15 +30,15 @@ describe("basic-keyval", function(){
   })
 
   it("should set person", function(done) {
-    person.set("foo", "bar", function(errors, obj){
-      obj.should.eql("bar")
+    person.set("foo", "bar", function(errors, record){
+      record.should.eql("bar")
       done()
     })
   })
   
   it("should get person", function(done) {
-    person.get("foo", function(errors, obj){
-      obj.should.eql("bar")
+    person.get("foo", function(record){
+      record.should.eql("bar")
       done()
     })
   })
