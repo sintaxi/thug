@@ -64,19 +64,22 @@ module.exports = function(config){
     
     // run in filters
     sift(record, filters.in, function(filtered_record){
-      that._valid(filtered_record, callback)
-      // if(identifier){
-      //   that.read(identifier, function(record){
-      //     if(record){
-      //       for(var prop in filtered_record)(function(prop){
-      //         record[prop] = filtered_record[prop]  
-      //       })(prop)
-      //     }
-      //     that._valid(record, callback)
-      //   })
-      // }else{
-      //   that._valid(record, callback)
-      // }
+      if(identifier){
+        that.read(identifier, function(record){
+          if(record && (record).constructor == Object){
+            // set the new values to the existing object
+            for(var prop in filtered_record)(function(prop){
+              record[prop] = filtered_record[prop]  
+            })(prop)
+          }else{
+            // new value to object
+            record = filtered_record
+          }
+          that._valid(record, callback)
+        })
+      }else{
+        that._valid(filtered_record, callback)
+      }
     })
   }
   
