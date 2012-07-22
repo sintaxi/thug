@@ -3,7 +3,6 @@ var Thug    = require("../thug")
 
 var person = new Thug({
   locals: {},
-  filters: {},
   validations: {}
 })
 
@@ -18,6 +17,7 @@ person.constructor.prototype.read = function(identifier, callback){
   callback(global[identifier])
 }
 
+// Tests
 describe("basic-keyval", function(){
 
   it("should set person", function(done) {

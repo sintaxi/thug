@@ -13,7 +13,7 @@ module.exports = function(config){
   var validations = config.validations
   
   // filters
-  var filters     = config.filters
+  var filters     = config.filters || {}
 
   var Int = function(local){
     this.local = local
