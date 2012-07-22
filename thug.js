@@ -103,6 +103,11 @@ module.exports = function(config){
   }
   
   Int.prototype.set = function(identifier, record, callback){
+    if(!callback){
+      callback    = record
+      record      = identifier
+      identifier  = null
+    }
     var that = this
     that.valid(identifier, record, function(errors, record){
       if(errors){

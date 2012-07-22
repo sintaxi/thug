@@ -39,7 +39,7 @@ describe("object store with filters", function(){
   var uuid;
 
   it("should create", function(done) {
-    store.set(null, { "name" : "Brock" }, function(errors, record){
+    store.set({ "name" : "Brock" }, function(errors, record){
       uuid = record.uuid
       record.should.have.property("uuid")
       record.should.have.property("name")
