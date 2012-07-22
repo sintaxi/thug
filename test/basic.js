@@ -1,7 +1,7 @@
 var should  = require("should")
 var Thug    = require("../thug")
 
-var person = new Thug({})
+var person = new Thug()
 
 // Write
 person.constructor.prototype.write = function(identifier, record, callback){

@@ -3,18 +3,15 @@ var validate  = require("./lib/flow/validate")
 
 
 module.exports = function(config){
-  
+  var config      = config || {} 
+  var filters     = config.filters || {}
+  var validations = config.validations || {}
+    
   // locals
   for(var local in config.locals)(function(local){
     this[local] = config.locals[local]
   })(local)
   
-  // validations
-  var validations = config.validations || {}
-  
-  // filters
-  var filters     = config.filters || {}
-
   var Int = function(local){
     this.local = local
   }
