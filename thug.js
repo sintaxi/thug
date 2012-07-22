@@ -10,7 +10,7 @@ module.exports = function(config){
   })(local)
   
   // validations
-  var validations = config.validations
+  var validations = config.validations || {}
   
   // filters
   var filters     = config.filters || {}
