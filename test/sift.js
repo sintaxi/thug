@@ -4,28 +4,47 @@ var sift = require("../lib/flow/sift")
 
 // basic filters
 
-var upcaseName = function(obj, next){
-  obj.name = obj.name.toUpperCase()
-  next()
+var upcaseName = function(record, next){
+  record.name = record.name.toUpperCase()
+  next(record)
 }
 
-var reverseName = function(obj, next){
-  obj.name = obj.name.split("").reverse().join("")
-  next()
+var reverseName = function(record, next){
+  record.name = record.name.split("").reverse().join("")
+  next(record)
 }
 
 // advanced filters
 
 var upcase = function(field){
-  return function(obj, next){
-    obj[field] = obj[field].toUpperCase()
-    next()
+  return function(record, next){
+    record[field] = record[field].toUpperCase()
+    next(record)
   }
 }
 
 // tests
 
 describe("sift", function(){
+
+  it("return object when empty stack", function(done) {
+    sift("foo", [], function(p){
+      p.should.eql("foo")
+      done()
+    })
+  })
+  
+  it("return object when empty stack", function(done) {
+    sift("foo", [
+    function(obj, cb){ cb(obj.replace("foo", "bar")) }], function(val){
+      val.should.eql("bar")
+      done()
+    })
+  })
+  
+})
+
+describe("sift object", function(){
 
   it("return object when empty stack", function(done) {
     var person = { name: "jay" }
@@ -60,3 +79,4 @@ describe("sift", function(){
   })
   
 })
+

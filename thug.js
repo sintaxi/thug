@@ -16,8 +16,6 @@ module.exports = function(config){
     this.local = local
   }
   
-  //Int.prototype.end = function()
-  
   Int.prototype._valid = function(record, callback){
 
     // we need to run before filters before we can run validations
@@ -101,6 +99,7 @@ module.exports = function(config){
   //   })  
   // }
 
+  // experimental
   Int.prototype.with = function(sp){
     return new Int(sp)
   }
@@ -126,7 +125,7 @@ module.exports = function(config){
   
   Int.prototype.set = function(identifier, record, callback){
     var that = this
-    that.valid(identifier, record, function(errors, record){      
+    that.valid(identifier, record, function(errors, record){
       if(errors){
         callback(errors, null)
       }else{
@@ -140,14 +139,6 @@ module.exports = function(config){
       }
     })
   }
-  
-  // Int.prototype.create = function(obj, cb){
-  //   this.save(null, obj, cb)
-  // }
-  // 
-  // Int.prototype.update = function(q, obj, cb){
-  //   this.save(q, obj, cb)
-  // }
   
   return new Int()
 }
