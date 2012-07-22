@@ -53,6 +53,13 @@ module.exports = function(config){
   
   // public
   Int.prototype.valid = function(identifier, record, callback){
+    if(!callback){
+      callback    = record
+      record      = identifier
+      identifier  = null
+    }
+    
+    
     var that = this;
     
     // run in filters

@@ -2,9 +2,9 @@ var should  = require("should")
 var Thug    = require("../thug")
 
 
-var sub = function(record, callback){
+var sub = function(record, next){
   record = record.replace("bar", "baz")
-  callback(record)
+  next(record)
 }
 
 var store = new Thug({

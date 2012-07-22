@@ -21,8 +21,6 @@ var greater = function(size){
   }  
 }
 
-
-
 // tests
 
 describe("validate", function(){

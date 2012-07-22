@@ -30,6 +30,14 @@ describe("basic", function(){
       done()
     })
   })
+  
+  it("should validate", function(done) {
+    basic.valid("foo", "bar", function(errors, record){
+      should.not.exist(errors)
+      record.should.eql("bar")
+      done()
+    })
+  })
 
 })
 
