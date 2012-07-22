@@ -2,7 +2,6 @@ var should  = require("should")
 var Thug    = require("../thug")
 
 var person = new Thug({
-  locals: {},
   validations: {}
 })
 
