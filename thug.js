@@ -1,7 +1,6 @@
 var sift      = require("./lib/flow/sift")
 var validate  = require("./lib/flow/validate")
 
-
 module.exports = function(config){
   var config      = config || {} 
   var filters     = config.filters || {}
@@ -58,11 +57,7 @@ module.exports = function(config){
       record      = identifier
       identifier  = null
     }
-    
-    
     var that = this;
-    
-    // run in filters
     sift(record, filters.in, function(filtered_record){
       if(identifier){
         that.read(identifier, function(record){
@@ -82,32 +77,6 @@ module.exports = function(config){
       }
     })
   }
-  
-  // Int.prototype.save = function(q, obj, cb){
-  //   delete obj.id
-  //   var that = this;
-  // 
-  //   that.valid(q, obj, function(errors, obj){
-  //     if(errors){
-  //       cb(errors, null)        
-  //     }else{
-  //       sift(obj, filters.after, function(record){
-  //         if(that.write){
-  //           that.write(record, function(err, obj){
-  //             if(!err){
-  //               that.out(obj, function(record){
-  //                 cb(null, record)
-  //               })
-  //             }
-  //           })  
-  //         }else{
-  //           console.log("must create a write() method.")
-  //           process.exit()
-  //         }
-  //       })          
-  //     }
-  //   })  
-  // }
 
   // experimental
   Int.prototype.with = function(sp){
