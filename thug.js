@@ -15,6 +15,7 @@ module.exports = function(config){
     this.local = local
   }
   
+  // private
   Int.prototype._valid = function(record, callback){
 
     // we need to run before filters before we can run validations
@@ -77,22 +78,8 @@ module.exports = function(config){
       }
     })
   }
-
-  // experimental
-  Int.prototype.with = function(sp){
-    return new Int(sp)
-  }
   
-  Int.prototype.out = function(record, callback){
-    if(record){
-      sift(record, filters.out, function(filtered_record){
-        callback(filtered_record)
-      })
-    }else{
-      callback(null)
-    }
-  }
-  
+  // public
   Int.prototype.get = function(identifier, callback){
     var that = this
     that.read(identifier, function(record){
@@ -102,6 +89,7 @@ module.exports = function(config){
     })
   }
   
+  // semi-public
   Int.prototype.set = function(identifier, record, callback){
     if(!callback){
       callback    = record
@@ -122,6 +110,32 @@ module.exports = function(config){
         })
       }
     })
+  }
+  
+  // private
+  Int.prototype.out = function(record, callback){
+    if(record){
+      sift(record, filters.out, function(filtered_record){
+        callback(filtered_record)
+      })
+    }else{
+      callback(null)
+    }
+  }
+  
+  // public (experimental)
+  Int.prototype.with = function(sp){
+    return new Int(sp)
+  }
+  
+  // overwrite me
+  Int.prototype.write = function(identifier, record, callback){
+    callback(record)
+  }
+  
+  // overwrite me
+  Int.prototype.read = function(identifier, callback){
+    callback(null)
   }
   
   return new Int()
