@@ -1,7 +1,37 @@
-Thug
-===========================================================
+# thug
 
-Creating a basic store using `Thug` ...
+## Why?
+
+Thug was created to minimize the complexity of validating and altering an
+object before writing it to a data store or performing an operation. Thug is
+not an ORM but is ment to be a replacment for one. Thug is very small and
+works on both the server or in a browser.
+
+## Instalation
+
+I always recomend you bundle your dependencies with your application. To do
+this, create a `package.json` file in the root of your project with the
+minimum information...
+
+    {
+      "name": "yourapplication",
+      "version": "0.1.0",
+      "dependencies": {
+        "thug": "0.2.3"
+      }
+    }
+
+Then run the following command using npm...
+
+    npm install
+
+OR, if you just want to start playing with the library run...
+
+    npm install thug
+
+## Docs
+
+Creating a basic store using Thug ...
 
     var store = new Thug()
     
@@ -18,10 +48,12 @@ Creating a basic store using `Thug` ...
 This gives us three basic methods `set`, `get`, `valid` ...
     
     store.set("foo", "bar", function(errors, record){
+      // errors => null
       // record => "bar"
     })
     
-    store.valid("foo", "bar", function(record){
+    store.valid("foo", "bar", function(errors, record){
+      // errors => null
       // record => "bar"
     })
     
@@ -29,22 +61,27 @@ This gives us three basic methods `set`, `get`, `valid` ...
       // record => "bar"
     })
 
-What we have created is a basic key/value store using `Thug` nothing special yet. Thug has two basic building blocks for you to use `filters` and `validations`.
+What we have created is a basic key/value store using `Thug` nothing special
+yet. Thug has two basic building blocks for you to use `filters` and
+`validations`.
 
 ## Filters
 
-Creating a filter is simple, just create a function that calls the next filter in the stack. Here is a simple filter that just logs the record to the console.
+Creating a filter is simple, just create a function that calls the next filter
+in the stack. Here is a simple filter that just logs the record to the console.
 
     var log = function(record, next){
       console.log(record)
       next(record)
     }
 
-Now that we have a `filter` we put it in our model where we want it to be called. There are four different places within the lifecycle of a call that the filter can be called.
+Now that we have a `filter` we put it in our model where we want it to be
+called. There are four different places within the lifecycle of a call that the
+filter can be called.
 
     var store = new Thug({
       filters: {
-        in      : [],
+        in      : [log],
         before  : [],
         after   : [],
         out     : []
@@ -53,19 +90,63 @@ Now that we have a `filter` we put it in our model where we want it to be called
 
 ### `in` filters
 
-`in` filters are ran when the `set` and `valid` functions are first called. This is useful when black-listing or white-listing properties on the record before running the `validations` are ran.
+`in` filters are ran when the `set` and `valid` functions are first called.
+This is useful when black-listing or white-listing properties on the record
+before the `validations` are ran.
 
 ### `before` filters
 
-`before` filters are called immediately prior to `validations` being called but after the `read` function is called in the cases where there is and `identifier` passed in. This is were you will do most of your heavy lifting in constructing your object data before going to the store such as setting a timestamp, generating a uuid or creating a hash based on a password.
+`before` filters are called immediately prior to `validations` being called
+but after the `read` function is called in the cases where there is and
+`identifier` passed in. This is were you will do most of your heavy lifting
+in constructing your object data before going to the store such as setting a
+timestamp, generating a uuid or creating a hash based on a password.
 
 ### `after` filters
 
-`after` filters are ran immediately after `validations` are ran but still before the `write` function is called. This is the last opportunity to clean the data up before storing the record. For example, you may want to delete a naked password.
+`after` filters are ran immediately after `validations` are ran but still
+before the `write` function is called. This is the last opportunity to clean
+the data up before storing the record. For example, you may want to delete a
+naked password.
 
 ### `out` filters
 
-`out` filters are ran immediately after the `write` function is ran. This is your opportunity to clean the data up before returning to the client.
+`out` filters are ran immediately after the `write` function is ran. This is
+your opportunity to clean the data up before returning to the client.
+
+## Validations
+
+A validation is a function that takes the arguments `field`, `record`,
+`errors`, `callback`. 
+
+    var noBob = function(field, record, errors, callback){
+      if(record[field] === "Bob") errors.push("cannot be Bob")
+      next()
+    }
+
+To use this validation, add to the field you would like to validate on.
+
+    var store = new Thug({
+      validations:{
+        name: [noBob]
+      }
+    })
+
+Now if we were to attempt to set an object in the store that has a name of
+"Bob". We will get an error object back and the object will not be saved.
+
+    store.set({ name: "Bob" }, function(errors, record){
+      console.log(errors)
+    })
+
+The errors object will look like this...
+
+    {
+      messages: ["name cannot be Bob"],
+      details: {
+        name: ["cannot be Bob"]
+      }
+    }
 
 ## API
 
@@ -87,7 +168,8 @@ If record fails validation, we return back to the client. otherwise continue...
     
 ### `valid([identifier,] record, callback)`
 
-The `valid` call is a subset of `set`. It fires the callback after validations are ran.
+The `valid` call is a subset of `set`. It fires the callback after validations
+are ran.
 
 #### Lifecycle of a `valid()` request
 
@@ -99,7 +181,8 @@ The `valid` call is a subset of `set`. It fires the callback after validations a
     
 ### `get(identifier, callback)`
 
-The `get` function calls the `read` function and passes the record through the `out` filters.
+The `get` function calls the `read` function and passes the record through the
+`out` filters.
 
 #### Lifecycle of a `get()` request
 
