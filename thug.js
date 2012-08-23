@@ -88,6 +88,16 @@ module.exports = function(config){
       })
     })
   }
+
+  // public
+  Int.prototype.del = function(identifier, callback){
+    var that = this
+    that.read(identifier, function(record){
+      that.remove(identifier, record, function(errors){
+        callback(errors)
+      })
+    })
+  }
   
   // semi-public
   Int.prototype.set = function(identifier, record, callback){
