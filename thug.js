@@ -5,14 +5,30 @@ module.exports = function(config){
   var config      = config || {} 
   var filters     = config.filters || {}
   var validations = config.validations || {}
+  var locals      = config.locals || {}
     
   // locals
-  for(var local in config.locals)(function(local){
-    this[local] = config.locals[local]
-  })(local)
+  // for(var local in config.locals)(function(local){
+  //   this[local] = config.locals[local]
+  // })(local)
   
-  var Int = function(local){
-    this.local = local
+  // for(var local in config.locals){
+  //   this[local] = config.locals[local]
+  // }
+  
+  
+  var Int = function(locals){
+    //console.log(scope)
+    
+    //console.log(this)
+    // for(var local in scope){
+    //   this[local] = scope[local]
+    // }
+    
+    this.locals = locals
+    
+    //console.log(this)
+    //this.locals = locals
   }
   
   // private
@@ -134,8 +150,14 @@ module.exports = function(config){
   }
   
   // public (experimental)
-  Int.prototype.with = function(sp){
-    return new Int(sp)
+  Int.prototype.with = function(locals){
+    var l = this.locals
+    
+    for(var local in locals){
+      l[local] = locals[local]
+    }
+    
+    return new Int(l)
   }
   
   // overwrite me
@@ -148,5 +170,5 @@ module.exports = function(config){
     callback(null)
   }
   
-  return new Int()
+  return new Int(config.locals || {})
 }
