@@ -22,7 +22,7 @@ module.exports = function(config){
   
   // private
   Int.prototype._valid = function(record, callback){
-
+    var that = this
     // we need to run before filters before we can run validations
     sift(record, filters.beforeValidate, function(filtered_object){
       var errors = { messages: [], details: {} }
@@ -35,8 +35,8 @@ module.exports = function(config){
         
       // validate each field
       for(var field in validations)(function(field){
-
-        validate(field, filtered_object, validations[field], function(field_errors){
+        
+        validate.call(that, field, filtered_object, validations[field], function(field_errors){
           count ++
           
           // we have field errrors
@@ -64,6 +64,8 @@ module.exports = function(config){
       identifier  = null
     }
     var that = this;
+    
+    var locals = this.locals
     sift(record, filters.in, function(filtered_record){
       if(identifier){
         that.read(identifier, function(record){
