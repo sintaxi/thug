@@ -17,7 +17,7 @@ minimum information...
       "name": "yourapplication",
       "version": "0.1.0",
       "dependencies": {
-        "thug": "0.3.0"
+        "thug": "0.3.1"
       }
     }
 
