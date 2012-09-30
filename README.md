@@ -44,6 +44,11 @@ Creating a basic store using Thug ...
       // retrieve the record
       // invoke callback with record
     }
+    
+    store.constructor.prototype.remove = function(identifier, callback){
+      // remove the record
+      // invoke callback with errors or null
+    }
 
 This gives us three basic methods `set`, `get`, `valid` ...
     
@@ -52,12 +57,12 @@ This gives us three basic methods `set`, `get`, `valid` ...
       // record => "bar"
     })
     
-    store.valid("foo", "bar", function(errors, record){
-      // errors => null
+    store.get("foo", function(record){
       // record => "bar"
     })
     
-    store.get("foo", function(record){
+    store.validate("foo", "bar", function(errors, record){
+      // errors => null
       // record => "bar"
     })
 
@@ -81,10 +86,10 @@ filter can be called.
 
     var store = new Thug({
       filters: {
-        in      : [log],
-        before  : [],
-        after   : [],
-        out     : []
+        in             : [],
+        beforeValidate : [],
+        beforeWrite    : [],
+        out            : []
       }
     })
 
@@ -156,12 +161,12 @@ The errors object will look like this...
 
   1. record is passed through `in` filters
   2. `read` is called (if identifier is present)
-  3. record is passed through `before` filters
+  3. record is passed through `beforeValidate` filters
   4. `validations` are ran
 
 If record fails validation, we return back to the client. otherwise continue...
 
-  5. record is passed through `after` filters
+  5. record is passed through `beforeWrite` filters
   6. `write` is called
   7. record is passed through `out` filters
   8. fires callback
@@ -175,7 +180,7 @@ are ran.
 
   1. record is passed through `in` filters
   2. `read` is called (if identifier is present)
-  3. record is passed through `before` filters
+  3. record is passed through `beforeValidate` filters
   4. `validations` are ran
   5. fires callback
     
