@@ -16,7 +16,88 @@ module.exports = function(config){
   var locals      = config.locals || {}  
   
   var Int = function(l){
+    var that = this
+    
     this.locals = l
+
+    // public
+    this.validate = function(identifier, record, callback){
+      if(!callback){
+        callback    = record
+        record      = identifier
+        identifier  = null
+      }
+
+      var locals = that.locals
+      sift.call(that, record, filters.in, function(filtered_record){
+        if(identifier){
+          that.read(identifier, function(record){
+            if(record && (record).constructor == Object){
+              // set the new values to the existing object
+              for(var prop in filtered_record)(function(prop){
+                record[prop] = filtered_record[prop]  
+              })(prop)
+            }else{
+              // new value to object
+              record = filtered_record
+            }
+            that._valid(record, callback)
+          })
+        }else{
+          that._valid(filtered_record, callback)
+        }
+      })
+    }
+
+    // public
+    this.get = function(identifier, callback){
+      that.read(identifier, function(record){
+        that.out(record, function(filtered_record){
+          callback(filtered_record)
+        })
+      })
+    }
+
+    // public
+    this.del = function(identifier, callback){
+      that.read(identifier, function(record){
+        that.remove(identifier, record, function(errors){
+          callback(errors)
+        })
+      })
+    }
+
+    // public
+    this.set = function(identifier, record, callback){
+      if(!callback){
+        callback    = record
+        record      = identifier
+        identifier  = null
+      }
+      that.validate(identifier, record, function(errors, record){
+        if(errors){
+          callback(errors, null)
+        }else{
+          sift.call(that, record, filters.beforeWrite, function(filtered_record){
+            that.write(identifier, filtered_record, function(saved_record){
+              that.out(saved_record, function(record){
+                callback(null, record)
+              })
+            })
+          })
+        }
+      })
+    }
+    
+    // public (experimental)
+    this.with = function(locals){
+      var l = clone(that.locals)    
+      for(var local in locals){
+        l[local] = locals[local]
+      }
+      return new Int(l)
+    }
+    
     return this
   }
   
@@ -56,79 +137,6 @@ module.exports = function(config){
     })
   }
   
-  // public
-  Int.prototype.validate = function(identifier, record, callback){
-    if(!callback){
-      callback    = record
-      record      = identifier
-      identifier  = null
-    }
-    var that = this;
-    
-    var locals = this.locals
-    sift.call(that, record, filters.in, function(filtered_record){
-      if(identifier){
-        that.read(identifier, function(record){
-          if(record && (record).constructor == Object){
-            // set the new values to the existing object
-            for(var prop in filtered_record)(function(prop){
-              record[prop] = filtered_record[prop]  
-            })(prop)
-          }else{
-            // new value to object
-            record = filtered_record
-          }
-          that._valid(record, callback)
-        })
-      }else{
-        that._valid(filtered_record, callback)
-      }
-    })
-  }
-  
-  // public
-  Int.prototype.get = function(identifier, callback){
-    var that = this
-    that.read(identifier, function(record){
-      that.out(record, function(filtered_record){
-        callback(filtered_record)
-      })
-    })
-  }
-
-  // public
-  Int.prototype.del = function(identifier, callback){
-    var that = this
-    that.read(identifier, function(record){
-      that.remove(identifier, record, function(errors){
-        callback(errors)
-      })
-    })
-  }
-  
-  // public
-  Int.prototype.set = function(identifier, record, callback){
-    if(!callback){
-      callback    = record
-      record      = identifier
-      identifier  = null
-    }
-    var that = this
-    that.validate(identifier, record, function(errors, record){
-      if(errors){
-        callback(errors, null)
-      }else{
-        sift.call(that, record, filters.beforeWrite, function(filtered_record){
-          that.write(identifier, filtered_record, function(saved_record){
-            that.out(saved_record, function(record){
-              callback(null, record)
-            })
-          })
-        })
-      }
-    })
-  }
-  
   // private
   Int.prototype.out = function(record, callback){
     if(record){
@@ -138,15 +146,6 @@ module.exports = function(config){
     }else{
       callback(null)
     }
-  }
-  
-  // public (experimental)
-  Int.prototype.with = function(locals){
-    var l = clone(this.locals)    
-    for(var local in locals){
-      l[local] = locals[local]
-    }
-    return new Int(l)
   }
   
   // overwrite me
