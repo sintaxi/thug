@@ -99,17 +99,17 @@ filter can be called.
 This is useful when black-listing or white-listing properties on the record
 before the `validations` are ran.
 
-### `before` filters
+### `beforeValidate` filters
 
-`before` filters are called immediately prior to `validations` being called
+`beforeValidate` filters are called immediately prior to `validations` being called
 but after the `read` function is called in the cases where there is and
 `identifier` passed in. This is were you will do most of your heavy lifting
 in constructing your object data before going to the store such as setting a
 timestamp, generating a uuid or creating a hash based on a password.
 
-### `after` filters
+### `beforeWrite` filters
 
-`after` filters are ran immediately after `validations` are ran but still
+`beforeWrite` filters are ran immediately after `validations` are ran but still
 before the `write` function is called. This is the last opportunity to clean
 the data up before storing the record. For example, you may want to delete a
 naked password.
@@ -171,10 +171,10 @@ If record fails validation, we return back to the client. otherwise continue...
   7. record is passed through `out` filters
   8. fires callback
     
-### `valid([identifier,] record, callback)`
+### `validate([identifier,] record, callback)`
 
-The `valid` call is a subset of `set`. It fires the callback after validations
-are ran.
+The `validate` call is a subset of `set`. It fires the callback after validations
+are ran but does not perform the beforeWrite filters nor call the `write` function.
 
 #### Lifecycle of a `valid()` request
 
