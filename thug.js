@@ -24,7 +24,7 @@ module.exports = function(config){
   Int.prototype._valid = function(record, callback){
     var that = this
     // we need to run before filters before we can run validations
-    sift(record, filters.beforeValidate, function(filtered_object){
+    sift.call(that, record, filters.beforeValidate, function(filtered_object){
       var errors = { messages: [], details: {} }
       var count = 0
       var total = Object.keys(validations).length
@@ -66,7 +66,7 @@ module.exports = function(config){
     var that = this;
     
     var locals = this.locals
-    sift(record, filters.in, function(filtered_record){
+    sift.call(that, record, filters.in, function(filtered_record){
       if(identifier){
         that.read(identifier, function(record){
           if(record && (record).constructor == Object){
@@ -118,7 +118,7 @@ module.exports = function(config){
       if(errors){
         callback(errors, null)
       }else{
-        sift(record, filters.beforeWrite, function(filtered_record){
+        sift.call(that, record, filters.beforeWrite, function(filtered_record){
           that.write(identifier, filtered_record, function(saved_record){
             that.out(saved_record, function(record){
               callback(null, record)
@@ -132,7 +132,7 @@ module.exports = function(config){
   // private
   Int.prototype.out = function(record, callback){
     if(record){
-      sift(record, filters.out, function(filtered_record){
+      sift.call(this, record, filters.out, function(filtered_record){
         callback(filtered_record)
       })
     }else{
