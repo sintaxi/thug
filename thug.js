@@ -1,41 +1,30 @@
 var sift      = require("./lib/flow/sift")
 var validate  = require("./lib/flow/validate")
 
+// http://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-clone-a-javascript-object
+var clone = function(obj){
+  if(obj == null || typeof(obj) != 'object') return obj
+  var temp = obj.constructor(); // changed
+  for(var key in obj) temp[key] = clone(obj[key]);
+  return temp;
+}
+
 module.exports = function(config){
   var config      = config || {} 
   var filters     = config.filters || {}
   var validations = config.validations || {}
-  var locals      = config.locals || {}
-    
-  // locals
-  // for(var local in config.locals)(function(local){
-  //   this[local] = config.locals[local]
-  // })(local)
+  var locals      = config.locals || {}  
   
-  // for(var local in config.locals){
-  //   this[local] = config.locals[local]
-  // }
-  
-  
-  var Int = function(locals){
-    //console.log(scope)
-    
-    //console.log(this)
-    // for(var local in scope){
-    //   this[local] = scope[local]
-    // }
-    
-    this.locals = locals
-    
-    //console.log(this)
-    //this.locals = locals
+  var Int = function(l){
+    this.locals = l
+    return this
   }
   
   // private
   Int.prototype._valid = function(record, callback){
 
     // we need to run before filters before we can run validations
-    sift(record, filters.before, function(filtered_object){
+    sift(record, filters.beforeValidate, function(filtered_object){
       var errors = { messages: [], details: {} }
       var count = 0
       var total = Object.keys(validations).length
@@ -68,7 +57,7 @@ module.exports = function(config){
   }
   
   // public
-  Int.prototype.valid = function(identifier, record, callback){
+  Int.prototype.validate = function(identifier, record, callback){
     if(!callback){
       callback    = record
       record      = identifier
@@ -115,7 +104,7 @@ module.exports = function(config){
     })
   }
   
-  // semi-public
+  // public
   Int.prototype.set = function(identifier, record, callback){
     if(!callback){
       callback    = record
@@ -123,11 +112,11 @@ module.exports = function(config){
       identifier  = null
     }
     var that = this
-    that.valid(identifier, record, function(errors, record){
+    that.validate(identifier, record, function(errors, record){
       if(errors){
         callback(errors, null)
       }else{
-        sift(record, filters.after, function(filtered_record){
+        sift(record, filters.beforeWrite, function(filtered_record){
           that.write(identifier, filtered_record, function(saved_record){
             that.out(saved_record, function(record){
               callback(null, record)
@@ -151,12 +140,10 @@ module.exports = function(config){
   
   // public (experimental)
   Int.prototype.with = function(locals){
-    var l = this.locals
-    
+    var l = clone(this.locals)    
     for(var local in locals){
       l[local] = locals[local]
     }
-    
     return new Int(l)
   }
   

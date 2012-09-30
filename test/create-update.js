@@ -18,10 +18,10 @@ describe("object store with filters", function(){
 
   var store = new Thug({
     filters: {
-      in:     [delUUID],
-      before: [genUUID],
-      after:  [],
-      out:    []
+      in              : [delUUID],
+      beforeValidate  : [genUUID],
+      beforeWrite     : [],
+      out             : []
     }
   })
 

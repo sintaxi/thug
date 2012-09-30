@@ -38,7 +38,7 @@ describe("basic", function(){
   })
   
   it("should validate", function(done) {
-    basic.valid("baz", "bar", function(errors, record){
+    basic.validate("baz", "bar", function(errors, record){
       should.not.exist(errors)
       record.should.eql("bar")
       done()

@@ -51,6 +51,13 @@ describe("with", function(){
       done()
     })
   })
+    
+  it("should still retain normal scope", function(done) {
+    t.set("doesnt", "matter", function(errors, record){
+      record.should.not.have.property("hello")
+      done()
+    })
+  })
   
   it("should not be global", function(done) {
     var locals = locals || null
