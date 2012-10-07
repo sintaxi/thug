@@ -10,10 +10,11 @@ var clone = function(obj){
 }
 
 module.exports = function(config){
-  var config      = config || {} 
-  var filters     = config.filters || {}
-  var validations = config.validations || {}
-  var locals      = config.locals || {}  
+  var config      = config              || {} 
+  var filters     = config.filters      || {}
+  var validations = config.validations  || {}
+  var locals      = config.locals       || {}
+  var methods     = config.methods      || {}
   
   var Int = function(l){
     var that = this
@@ -96,6 +97,11 @@ module.exports = function(config){
         l[local] = locals[local]
       }
       return new Int(l)
+    }
+    
+    // custom methods
+    for(var method in methods){
+      this[method] = methods[method]
     }
     
     return this
