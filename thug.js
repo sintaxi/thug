@@ -49,6 +49,14 @@ module.exports = function(config){
         }
       })
     }
+    
+    // custom methods
+    for(var method in methods)(function(method){
+      that[method] = function(){
+        methods[method].apply(that, arguments)
+      }      
+    })(method)
+    
 
     // public
     this.get = function(identifier, callback){
@@ -99,13 +107,10 @@ module.exports = function(config){
       return new Int(l)
     }
     
-    // custom methods
-    for(var method in methods){
-      this[method] = methods[method]
-    }
     
     return this
   }
+  
   
   // private
   Int.prototype._valid = function(record, callback){
