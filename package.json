@@ -1,7 +1,7 @@
 {
   "name": "thug",
   "description": "functional style object filtration and validation system",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "author": "Brock Whitten <brock@sintaxi.com>",
   "keywords": ["validations", "filter", "orm"],
   "main": "./thug.js",
