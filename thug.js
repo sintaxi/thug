@@ -18,8 +18,14 @@ module.exports = function(config){
   
   var Int = function(l){
     var that = this
-    
     this.locals = l
+    
+    // custom methods
+    for(var method in methods)(function(method){
+      that[method] = function(){
+        methods[method].apply(that, arguments)
+      }      
+    })(method)
 
     // public
     this.validate = function(identifier, record, callback){
@@ -28,9 +34,8 @@ module.exports = function(config){
         record      = identifier
         identifier  = null
       }
-
       var locals = that.locals
-      sift.call(that, record, filters.in, function(filtered_record){
+      that.in(record, function(filtered_record){
         if(identifier){
           that.read(identifier, function(record){
             if(record && (record).constructor == Object){
@@ -49,14 +54,6 @@ module.exports = function(config){
         }
       })
     }
-    
-    // custom methods
-    for(var method in methods)(function(method){
-      that[method] = function(){
-        methods[method].apply(that, arguments)
-      }      
-    })(method)
-    
 
     // public
     this.get = function(identifier, callback){
@@ -87,12 +84,12 @@ module.exports = function(config){
         if(errors){
           callback(errors, null)
         }else{
-          sift.call(that, record, filters.beforeWrite, function(filtered_record){
+          that.beforeWrite(record, function(filtered_record){
             that.write(identifier, filtered_record, function(saved_record){
               that.out(saved_record, function(record){
                 callback(null, record)
               })
-            })
+            })            
           })
         }
       })
@@ -107,7 +104,6 @@ module.exports = function(config){
       return new Int(l)
     }
     
-    
     return this
   }
   
@@ -116,7 +112,8 @@ module.exports = function(config){
   Int.prototype._valid = function(record, callback){
     var that = this
     // we need to run before filters before we can run validations
-    sift.call(that, record, filters.beforeValidate, function(filtered_object){
+    that.beforeValidate(record, function(filtered_object){
+      // TODO: make this into a separate lib
       var errors = { messages: [], details: {} }
       var count = 0
       var total = Object.keys(validations).length
@@ -127,7 +124,6 @@ module.exports = function(config){
         
       // validate each field
       for(var field in validations)(function(field){
-        
         validate.call(that, field, filtered_object, validations[field], function(field_errors){
           count ++
           
@@ -137,18 +133,51 @@ module.exports = function(config){
             errors.messages.push(field + " " + field_errors[0])
             errors.details[field] = field_errors[0]
           }
-
+          
           // validations are done
-          if(total == count)
+          if(total == count){
             return callback(errors.messages.length > 0 ? errors : null, filtered_object)
-
+          }
         })
       })(field)
       
     })
   }
   
-  // private
+  // semi-public
+  Int.prototype.in = function(record, callback){
+    if(record){
+      sift.call(this, record, filters.in, function(filtered_record){
+        callback(filtered_record)
+      })
+    }else{
+      callback(null)
+    }
+  }
+  
+  // semi-public
+  Int.prototype.beforeValidate = function(record, callback){
+    if(record){
+      sift.call(this, record, filters.beforeValidate, function(filtered_record){
+        callback(filtered_record)
+      })
+    }else{
+      callback(null)
+    }
+  }
+  
+  // semi-public
+  Int.prototype.beforeWrite = function(record, callback){
+    if(record){
+      sift.call(this, record, filters.beforeWrite, function(filtered_record){
+        callback(filtered_record)
+      })
+    }else{
+      callback(null)
+    }
+  }
+  
+  // semi-public
   Int.prototype.out = function(record, callback){
     if(record){
       sift.call(this, record, filters.out, function(filtered_record){
@@ -159,13 +188,18 @@ module.exports = function(config){
     }
   }
   
-  // overwrite me
+  // semi-public (overwrite me)
   Int.prototype.write = function(identifier, record, callback){
     callback(record)
   }
   
-  // overwrite me
+  // semi-public (overwrite me)
   Int.prototype.read = function(identifier, callback){
+    callback(null)
+  }
+  
+  // semi-public (overwrite me)
+  Int.prototype.remove = function(identifier, callback){
     callback(null)
   }
   
