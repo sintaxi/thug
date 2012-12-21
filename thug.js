@@ -35,7 +35,7 @@ module.exports = function(config){
         identifier  = null
       }
       var locals = that.locals
-      that.in(record, function(filtered_record){
+      that.in(clone(record), function(filtered_record){
         if(identifier){
           that.read(identifier, function(record){
             if(record && (record).constructor == Object){
