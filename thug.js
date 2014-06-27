@@ -10,7 +10,12 @@ var clone = function(obj){
 }
 
 module.exports = function(config){
-  var config      = config              || {} 
+  var config      = config              || {}
+  
+  var write       = config.write        || {}
+  var read        = config.read         || {}
+  var remove      = config.remove       || {}
+  
   var filters     = config.filters      || {}
   var validations = config.validations  || {}
   var locals      = config.locals       || {}
@@ -192,15 +197,43 @@ module.exports = function(config){
   Int.prototype.write = function(identifier, record, callback){
     callback(record)
   }
+
+  if (config.write) {
+    if (typeof config.write == "function") {
+      Int.prototype.write = config.write
+    } else {
+      // Throw error?
+      // throw new Error("Thug::write() method must be a function")
+    }
+  }
+  
   
   // semi-public (overwrite me)
   Int.prototype.read = function(identifier, callback){
     callback(null)
   }
+
+  if (config.read) {
+    if (typeof config.read == "function") {
+      Int.prototype.read = config.read
+    } else {
+      // Throw error?
+      // throw new Error("Thug::read() method must be a function")
+    }
+  }
   
   // semi-public (overwrite me)
   Int.prototype.remove = function(identifier, callback){
     callback(null)
+  }
+
+  if (config.remove) {
+    if (typeof config.remove == "function") {
+      Int.prototype.remove = config.remove
+    } else {
+      // Throw error?
+      // throw new Error("Thug::remove() method must be a function")
+    }
   }
   
   return new Int(config.locals || {})

@@ -4,24 +4,22 @@ var Thug    = require("../thug")
 // Tests
 describe("basic", function(){
   
-  var basic = new Thug()
-
-  // Write
-  basic.constructor.prototype.write = function(identifier, record, callback){
-    global[identifier] = record
-    callback(record)
-  }
-
-  // Read
-  basic.constructor.prototype.read = function(identifier, callback){
-    callback(global[identifier])
-  }
-
-  // Remove
-  basic.constructor.prototype.remove = function(identifier, record, callback){
-    global[identifier] = null
-    callback(null)
-  }
+  var basic = new Thug({
+    // Write
+    write: function(identifier, record, callback){
+      global[identifier] = record
+      callback(record)
+    },
+    // Read
+    read: function(identifier, callback){
+      callback(global[identifier])
+    },
+    // Remove
+    remove: function(identifier, record, callback){
+      global[identifier] = null
+      callback(null)
+    }
+  })
 
   it("should set", function(done) {
     basic.set("foo", "bar", function(errors, record){
