@@ -64,7 +64,7 @@ module.exports = function(config){
     this.get = function(identifier, callback){
       that.read(identifier, function(record){
         that.out(record, function(filtered_record){
-          callback(filtered_record)
+          callback(null, filtered_record)
         })
       })
     }

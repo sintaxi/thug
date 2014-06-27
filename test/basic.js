@@ -29,7 +29,7 @@ describe("basic", function(){
   })
   
   it("should get", function(done) {
-    basic.get("foo", function(record){
+    basic.get("foo", function(errors, record){
       record.should.eql("bar")
       done()
     })

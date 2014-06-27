@@ -25,7 +25,7 @@ describe("object store", function(){
   })
   
   it("should get", function(done) {
-    store.get("user", function(record){
+    store.get("user", function(errors, record){
       record.should.eql({ "name" : "Brock" })
       done()
     })

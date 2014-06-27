@@ -33,7 +33,7 @@ describe("basic store with filter", function(){
   })
   
   it("should get filtered value", function(done) {
-    store.get("foo", function(record){
+    store.get("foo", function(errors, record){
       record.should.eql("baz")
       done()
     })

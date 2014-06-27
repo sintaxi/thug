@@ -49,7 +49,7 @@ describe("object store with filters", function(){
   })
   
   it("should get", function(done) {
-    store.get(uuid, function(record){
+    store.get(uuid, function(errors, record){
       record.should.have.property("uuid", uuid)
       record.should.have.property("name", "Brock")
       done()
@@ -66,7 +66,7 @@ describe("object store with filters", function(){
   })
   
   it("should get", function(done) {
-    store.get(uuid, function(record){
+    store.get(uuid, function(errors, record){
       record.should.have.property("uuid")
       record.should.have.property("name", "Brock Whitten")
       done()
