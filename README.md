@@ -57,7 +57,7 @@ This gives us three basic methods `set`, `get`, `valid` ...
       // record => "bar"
     })
     
-    store.get("foo", function(record){
+    store.get("foo", function(errors, record){
       // record => "bar"
     })
     
@@ -101,8 +101,7 @@ before the `validations` are ran.
 
 ### `beforeValidate` filters
 
-`beforeValidate` filters are called immediately prior to `validations` being called
-but after the `read` function is called in the cases where there is and
+`beforeValidate` filters are called immediately prior to `validations` being called but after the `read` function is called in the cases where there is and
 `identifier` passed in. This is were you will do most of your heavy lifting
 in constructing your object data before going to the store such as setting a
 timestamp, generating a uuid or creating a hash based on a password.
@@ -126,7 +125,7 @@ A validation is a function that takes the arguments `field`, `record`,
 
     var noBob = function(field, record, errors, callback){
       if(record[field] === "Bob") errors.push("cannot be Bob")
-      next()
+      callback()
     }
 
 To use this validation, add to the field you would like to validate on.

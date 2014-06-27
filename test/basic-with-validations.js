@@ -35,7 +35,7 @@ describe("basic store with validations", function(){
   })
   
   it("should not return value", function(done) {
-    store.get("name", function(value){
+    store.get("name", function(errors, value){
       should.not.exist(value)
       done()
     })
@@ -50,7 +50,7 @@ describe("basic store with validations", function(){
   })
   
   it("should get saved record", function(done) {
-    store.get("name", function(value){
+    store.get("name", function(errors, value){
       value.should.eql("fred")
       done()
     })
