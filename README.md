@@ -126,7 +126,7 @@ A validation is a function that takes the arguments `field`, `record`,
 
     var noBob = function(field, record, errors, callback){
       if(record[field] === "Bob") errors.push("cannot be Bob")
-      next()
+      callback()
     }
 
 To use this validation, add to the field you would like to validate on.
