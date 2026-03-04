@@ -1,39 +1,41 @@
-var should  = require("should")
-var Thug    = require("../thug")
+const should = require("should")
+const Thug = require("../thug")
 
-var sub = function(record, next){
+const sub = function (record, next) {
   record = record.replace("bar", "baz")
   next(record)
 }
 
-var store = new Thug({
+const db = {}
+
+const store = new Thug({
   filters: {
     in: [sub]
   }
 })
 
 // Write
-store.constructor.prototype.write = function(identifier, record, callback){
-  global[identifier] = record
+store.constructor.prototype.write = function (identifier, record, callback) {
+  db[identifier] = record
   callback(record)
 }
 
 // Read
-store.constructor.prototype.read = function(identifier, callback){
-  callback(global[identifier])
+store.constructor.prototype.read = function (identifier, callback) {
+  callback(db[identifier])
 }
 
-describe("basic store with filter", function(){
+describe("basic store with filter", function () {
 
-  it("should set", function(done) {
-    store.set("foo", "bar", function(errors, record){
+  it("should set", function (done) {
+    store.set("foo", "bar", function (errors, record) {
       record.should.eql("baz")
       done()
     })
   })
-  
-  it("should get filtered value", function(done) {
-    store.get("foo", function(record){
+
+  it("should get filtered value", function (done) {
+    store.get("foo", function (record) {
       record.should.eql("baz")
       done()
     })
