@@ -1,10 +1,14 @@
 {
   "name": "thug",
   "description": "functional style object filtration and validation system",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "author": "Brock Whitten <brock@sintaxi.com>",
   "license": "MIT",
-  "keywords": ["validations", "filter", "orm"],
+  "keywords": [
+    "validations",
+    "filter",
+    "orm"
+  ],
   "main": "./thug.js",
   "scripts": {
     "preversion": "npm test",
