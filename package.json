@@ -7,6 +7,8 @@
   "keywords": ["validations", "filter", "orm"],
   "main": "./thug.js",
   "scripts": {
+    "preversion": "npm test",
+    "version": "npm publish",
     "test": "mocha test/*"
   },
   "devDependencies": {
