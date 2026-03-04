@@ -4,12 +4,12 @@
 
 Thug was created to minimize the complexity of validating and altering an
 object before writing it to a data store or performing an operation. Thug is
-not an ORM but is ment to be a replacment for one. Thug is very small and
+not an ORM but is meant to be a replacement for one. Thug is very small and
 works on both the server or in a browser.
 
-## Instalation
+## Installation
 
-I always recomend you bundle your dependencies with your application. To do
+I always recommend you bundle your dependencies with your application. To do
 this, create a `package.json` file in the root of your project with the
 minimum information...
 
@@ -17,7 +17,7 @@ minimum information...
       "name": "yourapplication",
       "version": "0.1.0",
       "dependencies": {
-        "thug": "0.4.2"
+        "thug": "0.4.x"
       }
     }
 
